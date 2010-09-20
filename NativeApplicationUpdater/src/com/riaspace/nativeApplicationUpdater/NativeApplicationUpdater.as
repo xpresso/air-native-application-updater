@@ -172,19 +172,6 @@ package com.riaspace.nativeApplicationUpdater
 
 				if (!checkForUpdateEvent.isDefaultPrevented())
 				{
-					addEventListener(StatusUpdateEvent.UPDATE_STATUS,
-						function(event:StatusUpdateEvent):void
-						{
-							if (event.available && !event.isDefaultPrevented())
-								downloadUpdate();
-						});
-					addEventListener(UpdateEvent.DOWNLOAD_COMPLETE,
-						function(event:UpdateEvent):void
-						{
-							if (!event.isDefaultPrevented())
-								setTimeout(installUpdate, 10); // This is a hack for windows platform as download complete event is fired before file is released
-						});
-					
 					checkForUpdate();
 				}
 			}
@@ -332,6 +319,10 @@ package com.riaspace.nativeApplicationUpdater
 		
 		public function installUpdate():void
 		{
+			setTimeout(_installUpdate, 10); // This is a hack for windows platform as download complete event is fired before file is released
+		}
+		
+		private function _installUpdate():void {
 			if (currentState == DOWNLOADED)
 			{
 				if (os.indexOf("win") > -1)
